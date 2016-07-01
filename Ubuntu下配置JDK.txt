@@ -1,0 +1,8 @@
+->下载JDK的文件tar.gz
+->tar zxvf jdk.tar.gz -C /opt
+->修改profile,vi /ect/profile
+->在末尾加上:
+    export JAVA_HOME=jdk目录
+    export JRE_HOME=${jdk目录}/jre
+    export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+    export PATH=${JAVA_HOME}/bin:$PATH

@@ -1,0 +1,39 @@
+Ubuntu下配置mysql
+    ->检查是否已经安装mysql
+        ->使用命令sudo netstat -tap | grep mysql,如果没有任何信息显示则没有
+    ->安装mysql
+        ->使用命令sudo apt-get install mysql-server mysql-client
+        ->安装过程中会要求输入root用户的密码,这个root用户不是系统的root用户.是mysql的root用户
+        ->安装完成检查一下是否安装好
+    ->mysql默认是禁止远程访问,要开启远程访问则要修改/etc/mysql/my.conf
+        ->将bind-address = 127.0.0.1注释
+        ->然后登陆mysql
+            ->使用grant all privileges on *.* to root@"%" identified by "password" with grant option;flush privileges;
+            ->第一行命令解释如下，*.*：第一个*代表数据库名；第二个*代表表名。
+              这里的意思是所有数据库里的所有表都授权给用户。root：授予root账号。
+              “%”：表示授权的用户IP可以指定，这里代表任意的IP地址都能访问MySQL数据库。“password”：分配账号对应的密码，这里密码自己替换成你的mysql root帐号密码。
+            ->第二行命令是刷新权限信息，也即是让我们所作的设置马上生效。
+    ->mysql的一些操作
+        ->开启mysql服务
+            ->service mysql start
+            ->/etc/init.d/mysql start
+            ->使用safe_mysql启动:safe_mysql&
+        ->关闭mysql服务
+            ->service mysql stop
+            ->/etc/inint.d/mysql stop
+            ->mysqladmin shutdown
+        ->重启mysql服务
+            ->service mysql restart
+            ->/etc/inint.d/mysql restart
+        ->创建用户
+            ->mysql> insert into mysql.user(Host,User,Password) values(“localhost”,”username”,password(“1234″));
+            ->mysql>flush privileges;
+        ->给用户赋权限
+            ->mysql>grant all privileges on ptubuntuDB.* to ptubuntu@localhost identified by ’1234″;
+            ->mysql>flush privileges;
+        ->命令行修改root密码
+            ->mysql> UPDATE mysql.user SET password=PASSWORD('新密码') WHERE User='root';
+            ->mysql> FLUSH PRIVILEGES;
+        ->修改用户密码
+            ->格式：mysqladmin -u用户名 -p旧密码 password 新密码。 例如
+            ->mysqladmin -u root -p ab12 password ******

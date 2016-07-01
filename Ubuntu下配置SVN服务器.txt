@@ -1,0 +1,27 @@
+Ubuntu下搭建SVN服务器
+    ->安装SVN
+        ->使用命令:sudo apt-get install subversion
+    ->创建仓库目录
+        ->sudo mkdir /home/svnrep
+        ->如果非root用户.请修改svnrep权限,使用命令:sudo chmod -R 777 svnrep
+        ->在svnrep下创建文件夹,mkdir test,PS:仓库名为文件名
+        ->使用 svnadmin create test 创建svn仓库
+        ->修改仓库里面conf文件夹下的svnserve.conf文件
+            ->anon-access = none
+            ->auth-access = write
+            ->password-db = passwd
+            ->authz-db = authz
+        ->修改passwd,创建svn用户
+            ->添加一行:username=userpassword
+        ->修改authz,配置仓库权限
+            ->在[groups]下添加一行:admin=username,admin为组名,username为用户名
+            ->空开一行,输入:
+                [/]
+                @admin=rw
+                *=
+            ->意思是admin组具有读写权限,非组成员不能读和写
+    ->启动SVN服务
+        ->svnserve -d -r /home/svnrep
+        ->-d 表示svnserver以"守护进程"的形式启动
+        ->-r 指定文件系统的根位置,可以不用使用全路径就可以访问svnrep
+        

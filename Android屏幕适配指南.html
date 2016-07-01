@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MarkdownPad Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<h1>Android屏幕适配</h1>
+<h1>1、pt,px,dp</h1>
+<pre><code>1. pt(point):磅/点,固定长度单位,1pt = 1/72inch = 2.54cm
+2. px(pixel):像素,相对大小单位
+</code></pre>
+
+<h1>2、换算</h1>
+<pre><code>-&gt;1pt = (ppi / 72)px
+</code></pre>
+
+<h1>3、屏幕尺寸(单位:英寸)</h1>
+<pre><code>1. 屏幕对象线的长度
+2. Android把所有的屏幕大小分为四种尺寸:小,普通,大,超大
+    - 小:一般指屏幕尺寸小于3英寸左右
+    - 中:一般指屏幕尺寸小于4.5英寸左右
+    - 大:一般指屏幕尺寸在4.5英寸~7英寸左右
+    - 超大:一般指屏幕尺寸7英寸~10英寸左右
+</code></pre>
+
+<h1>4、分辨率</h1>
+<pre><code>1. 判断屏幕清晰度的指标:ppi,每英寸所拥有的像素点/每英寸像素
+2. 计算公式:√(2X+2Y) / Z,其中X:垂直像素数;Y:水平像素数,Z:屏幕尺寸
+    - 可在百度等搜索引擎中搜索ppi计算,如:http://www.lukiya.com/App/PPICalculator
+3. PS:当你拿的手机距离你约25~30厘米,如果手机ppi达到300以上,你的眼睛将无法分辨出像素点.这也就是苹果提出的视网膜屏幕
+</code></pre>
+
+<h1>5、dpi</h1>
+<pre><code>- 印刷单位,指每英寸所能印刷出来的网点数
+</code></pre>
+
+<h1>6、dp,px转换</h1>
+<pre><code>1. dp(Density-independent Pixels)
+    - 与屏幕无关的像素单位.Android开发的虚拟单位.在每英寸160点的显示器上,1dp = 1px
+2.dip(Device Independent Pixels)
+    - 设备独立像素单位,Android开发虚拟单位,多用于Android示例计数单位
+3. 在Android开发中,dp=dip
+4. sp(Scale-independent Pixels)
+    - Android字体大小虚拟单位.在每英寸160点的显示器上,当文字大小为100%时,1sp = 1px
+5. 单位换算:
+    <img src="1.png" />
+    - dp = (160 / ppi) * px
+    - px = dp * ppi / 160
+</code></pre>
+
+<h1>7. UI屏幕适配方案</h1>
+<img src="2.png" />
+<pre><code>1. 适配原则
+    - 尽可能适配大部分用户 
+    - 能实现承上启下
+    - 符合设备发展趋势
+    - 经济适用
+2. 查看当前手机分辨率占有率状况
+    - 进入http://www.umindex.com/devices/android_resolutions 查看当前手机分辨率市场占用率情况
+3. 让不同的内容自动适应不同的屏幕比例
+    - 在layout文件夹分别对layout-w360dp和layout-w320dp调整布局
+    - 多套分辨率的切图,如nodpi,xhdpi,xxhdpi等
+        - nodpi是指在任何分辨率的屏幕上显示都是一样的大小
+    - 建议提供一套XXHdpi的图片.对于图标等要求净系的图片.可以再制作一套XHdpi补充.
+    - 如果考虑横竖屏的布局效果.Android有layout-land和layout-port两个目录一.分别放置横竖屏两种布局文件.在手机屏幕方向变化时会自动调用相应的布局文件
+4. 预测未来几年的主流分辨率为1080P
+</code></pre>
+
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

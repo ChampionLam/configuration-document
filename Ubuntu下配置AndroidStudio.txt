@@ -1,0 +1,22 @@
+1->	配置好Java环境变量
+		->/etc/profile
+			->JAVA_HOME	(JDK目录)
+			->JRE_HOME	(JRE目录)
+			->CLASSPATH	(CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib)
+			->PATH		(PATH=${JAVA_HOME}/bin:$PATH)
+2->	下载Android Studio(Linux版,android-studio.org可以下载,无需翻墙)
+	下载Android SDK
+3->	下载各个版本SDK
+4->	sudo apt-get install lib32stdc++6 lib32z1	避免Android Studio-build错误:app:mergeDebugResources FAILED
+5->	真机调试
+		->lsusb  通过该命令查询设置usb的ID
+		->创建android真机的usb规则sudo gedit /etc/udev/rules.d/android.rules
+		->SUBSYSTEM=="usb", SYSFS{idVendor}=="(usb设备ID)", MODE="0666"
+			->如果有多台设备.可以写多条对应的数据
+		->改变文件权限，并重启usb服务sudo chmod a+rx /etc/udev/rules.d/Android.rules  重启sudo /etc/init.d/udev restart  
+		->最好重启一下电脑
+PS:
+	进入sdk的platform-tools下
+		->./adb kill-server
+		->./adb start-server
+		->./adb devices 
