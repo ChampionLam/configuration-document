@@ -1,0 +1,285 @@
+系统环境：Centos 6.7
+软件环境：JDK-1.8.0_65、Nginx-1.10.3、Tomcat-8.5.8
+文档环境：/opt/app/ 存放软件目录，至于mkdir创建文件就不用再说了
+
+首先将东西下载或上传到服务器上，/opt/app/目录存放Tomcat和JDK的包，分别是apache-tomcat-8.5.8.tar.gz和jdk-8u65-linux-x64.tar.gz，使用tar -zxvf xxx.tar.gz解压，而nginx-1.10.3.tar.gz随便找个地方存放着，不要放在一起，下面再说为什么！
+1、配置JDK
+编辑/etc/profile(vi /etc/profile)，在最底下加上：
+export JAVA_HOME=/opt/app/jdk1.8.0_65
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+使用source /etc/profile 令配置文件生效，通过java -version判断是否成功即可
+
+
+2、安装Tomcat
+其实都不算安装，Tomcat解压可用，配置好Java的环境变量之后进入Tomcat解压后的目录，进入其bin目录，执行以下startup.sh文件即可，Tomcat默认端口是8080，通过ip:8080即可判断Tomcat是否成功启动，或者通过netstat -nltp查看端口、jps查看java进程显示Bootstrap都可以检测Tomcat是否启动
+
+
+3、安装Nginx
+在任意地方解压nginx-1.10.3.tar.gz，之所以不将该文件与JDK等文件存放一起是因为Nginx是编译安装，可以指定编译安装路径，使三个软件都存放在相同位置，没有强迫症的童鞋可随意。
+在编译安装nginx之前需要先安装一些依赖包，这是非常重要的。其中包括有C/C++的编译等，由于使用的是centos系统，所以apt-get什么就不会出现，使用的是yum安装
+yum -y install gcc gcc-c++ autoconf automake
+yum -y install zlib zlib-devel openssl opsenssl-devel pcre pcre-devel
+安装好依赖项之后，进入nginx解压目录，使用./configure --prefix=/opt/app/nginx配置nginx安装目录，之后使用make && make install进行编译安装，安装好了之后，在/opt/app/中就会生成nginx目录了。进入/opt/app/nginx/sbin，执行./nginx启动nginx。Nginx默认端口是80，通过IP即可判断Nginx是否成功启动，或者通过nestat -nltp查看端口，ps -ef | grep nginx查看Nginx进程都可以检测Nginx是否启动
+
+4、配置Nginx重定向到Tomcat
+修改ngin配置文件，进入nginx安装好的目录里面的conf目录，修改nginx.conf文件，vi nginx.conf，找到server的设置，在location一项中添加proxy_pass http://localhost:8080;如下图，即将原本指向Nginx的地址重定向到Tomcat的地址，重新启动Nginx，通过IP直接访问即可重定向到Tomcat页面，这就是简单的Nginx+Tomcat整合。
+
+
+5、配置Tomcat开机自启动
+服务器经常会不明原因地奔溃、重启，尤其是云服务器，如果每次都要自己手动启动Tomcat那就太麻烦了，因为我们需要将Tomcat配置开机启动。首先，在/etc/init.d/目录下创建一个名为tomcat的文件，直接vi tomcat进入编辑即可，然后输入一下内容（可复制）：
+#!/bin/bash
+# chkconfig: 345 99 10
+# description: Auto-starts tomcat
+# /etc/init.d/tomcat
+# Tomcat auto-start
+# Source function library.
+#. /etc/init.d/functions
+# source networking configuration.
+#. /etc/sysconfig/network
+RETVAL=0
+##这里是配置jre路径
+export JRE_HOME=/root/app/jdk1.8.0_65/jre
+##这里是Tomcat路径
+export CATALINA_HOME=/opt/app/apache-tomcat-8.5.8
+start()
+{
+        if [ -f $CATALINA_HOME/bin/startup.sh ];
+          then
+            echo $"Starting Tomcat"
+                $CATALINA_HOME/bin/startup.sh
+            RETVAL=$?
+            echo " OK"
+            return $RETVAL
+        fi
+}
+stop()
+{
+        if [ -f $CATALINA_HOME/bin/shutdown.sh ];
+          then
+            echo $"Stopping Tomcat"
+                $CATALINA_HOME/bin/shutdown.sh
+            RETVAL=$?
+            sleep 1
+            ps -fwwu tomcat | grep apache-tomcat|grep -v grep | grep -v PID | awk '{print $2}'|xargs kill -9
+            echo " OK"
+            # [ $RETVAL -eq 0 ] && rm -f /var/lock/...
+            return $RETVAL
+        fi
+}
+
+case "$1" in
+ start) 
+        start
+        ;;
+ stop)  
+        stop
+        ;;
+                                                
+ restart)
+         echo $"Restaring Tomcat"
+         $0 stop
+         sleep 1
+         $0 start
+         ;;
+ *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+exit $RETVAL
+
+保存后配置一下权限chmod a+x tomcat(a+x参数表示 ==> all user can execute  所有用户可执行)
+然后这个脚本设置为开机启动，chkconfig --add tomcat
+通过service tomcat start/stop/restart就可以启动/停止/重启Tomcat了，而且还会有提示信息
+
+6、配置Nginx开机自启动
+与Tomcat配置同理，在/etc/init.d/目录下添加nginx脚本文件，输入以下代码：
+#!/bin/bash
+
+#
+
+# nginx - this script starts and stops the nginx daemin
+
+#
+
+# chkconfig: - 85 15
+
+# description: Nginx is an HTTP(S) server, HTTP(S) reverse
+
+# proxy and IMAP/POP3 proxy server
+
+# processname: nginx
+
+# config: /usr/local/nginx/conf/nginx.conf
+
+# pidfile: /usr/local/nginx/logs/nginx.pid
+
+# Source function library.
+
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+
+. /etc/sysconfig/network
+
+# Check that networking is up.
+
+[ "$NETWORKING" = "no" ] && exit 0
+## Nginx路径
+nginx="/opt/app/nginx/sbin/nginx"
+
+prog=$(basename $nginx)
+## Nginx配置文件路径
+NGINX_CONF_FILE="/opt/app/nginx/conf/nginx.conf"
+
+lockfile=/var/lock/subsys/nginx
+
+start() {
+
+[ -x $nginx ] || exit 5
+
+[ -f $NGINX_CONF_FILE ] || exit 6
+
+echo -n $"Starting $prog: "
+
+daemon $nginx -c $NGINX_CONF_FILE
+
+retval=$?
+
+echo
+
+[ $retval -eq 0 ] && touch $lockfile
+
+return $retval
+
+}
+
+stop() {
+
+echo -n $"Stopping $prog: "
+
+killproc $prog -QUIT
+
+retval=$?
+
+echo
+
+[ $retval -eq 0 ] && rm -f $lockfile
+
+return $retval
+
+}
+
+restart() {
+
+configtest || return $?
+
+stop
+
+start
+
+}
+
+reload() {
+
+configtest || return $?
+
+echo -n $"Reloading $prog: "
+
+killproc $nginx -HUP
+
+RETVAL=$?
+
+echo
+
+}
+
+force_reload() {
+
+restart
+
+}
+
+configtest() {
+
+$nginx -t -c $NGINX_CONF_FILE
+
+}
+
+rh_status() {
+
+status $prog
+
+}
+
+rh_status_q() {
+
+rh_status >/dev/null 2>&1
+
+}
+
+case "$1" in
+
+start)
+
+rh_status_q && exit 0
+
+$1
+
+;;
+
+stop)
+
+rh_status_q || exit 0
+
+$1
+
+;;
+
+restart|configtest)
+
+$1
+
+;;
+
+reload)
+
+rh_status_q || exit 7
+
+$1
+
+;;
+
+force-reload)
+
+force_reload
+
+;;
+
+status)
+
+rh_status
+
+;;
+
+condrestart|try-restart)
+
+rh_status_q || exit 0
+
+;;
+
+*)
+
+echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}"
+
+exit 2
+
+esac
+
+保存后配置一下权限chmod a+x nginx(a+x参数表示 ==> all user can execute  所有用户可执行)
+然后这个脚本设置为开机启动，chkconfig --add nginx
+通过service nginx start/stop/restart就可以启动/停止/重启Nginx了，而且还会有提示信息
+
+Centos6.7配置Nginx+Tomcat简单整合到此完成了，其中很多配置方法并不唯一，选择自己喜欢的方式即可。
